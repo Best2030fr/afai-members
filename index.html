@@ -3,72 +3,37 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Espace Membres | AFai - Association Française de l'Arôme</title>
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,600;0,700;1,400&family=DM+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <title>Espace Membres | AFai</title>
+    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@600&family=DM+Sans:wght@400;500;600&display=swap" rel="stylesheet">
     <style>
         :root {
-            --color-forest: #1a4d2e; --color-sage: #4a7c59; --color-lavender: #7c6a9c;
-            --color-cream: #f8f5f0; --color-gold: #c9a227; --color-rose: #d4a5a5;
-            --color-dark: #2d2d2d; --color-muted: #6b6b6b;
-            --shadow-soft: 0 4px 20px rgba(26, 77, 46, 0.08);
+            --color-forest: #1a4d2e; --color-sage: #4a7c59;
+            --color-cream: #f8f5f0; --color-dark: #2d2d2d;
             --shadow-elevated: 0 8px 40px rgba(26, 77, 46, 0.12);
-            --radius-md: 16px; --radius-lg: 24px;
         }
         * { margin: 0; padding: 0; box-sizing: border-box; }
-        body { font-family: 'DM Sans', sans-serif; background: var(--color-cream); color: var(--color-dark); }
+        body { font-family: 'DM Sans', sans-serif; background: var(--color-cream); height: 100vh; display: flex; flex-direction: column; }
         
         /* 登入畫面 */
-        .login-screen { position: fixed; inset: 0; background: linear-gradient(135deg, var(--color-forest) 0%, #0d2818 100%); display: flex; align-items: center; justify-content: center; z-index: 1000; transition: opacity 0.6s ease, visibility 0.6s ease; }
-        .login-screen.hidden { opacity: 0; visibility: hidden; pointer-events: none; }
-        .login-card { background: rgba(255, 255, 255, 0.95); backdrop-filter: blur(20px); padding: 50px 40px; border-radius: var(--radius-lg); box-shadow: var(--shadow-elevated); text-align: center; max-width: 400px; width: 90%; }
+        .login-screen { position: fixed; inset: 0; background: linear-gradient(135deg, var(--color-forest) 0%, #0d2818 100%); display: flex; align-items: center; justify-content: center; z-index: 1000; transition: opacity 0.6s ease; }
+        .login-screen.hidden { opacity: 0; pointer-events: none; }
+        .login-card { background: rgba(255, 255, 255, 0.95); padding: 50px 40px; border-radius: 24px; box-shadow: var(--shadow-elevated); text-align: center; width: 90%; max-width: 400px; }
         .login-logo { width: 70px; height: 70px; margin: 0 auto 20px; background: linear-gradient(135deg, var(--color-forest), var(--color-sage)); border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 30px; }
-        .login-title { font-family: 'Cormorant Garamond', serif; font-size: 28px; font-weight: 600; color: var(--color-forest); margin-bottom: 8px; }
-        .login-subtitle { color: var(--color-muted); font-size: 14px; margin-bottom: 24px; }
-        .login-input { width: 100%; padding: 14px 18px; border: 2px solid #e8e4de; border-radius: var(--radius-md); font-size: 16px; font-family: inherit; margin-bottom: 16px; }
-        .login-input:focus { outline: none; border-color: var(--color-sage); }
-        .login-btn { width: 100%; padding: 14px; background: linear-gradient(135deg, var(--color-forest), var(--color-sage)); color: white; border: none; border-radius: var(--radius-md); font-size: 16px; font-weight: 600; cursor: pointer; }
-        .login-error { color: #c44; font-size: 14px; margin-top: 12px; display: none; }
-        .login-error.show { display: block; }
+        .login-title { font-family: 'Cormorant Garamond', serif; font-size: 28px; font-weight: 600; color: var(--color-forest); margin-bottom: 24px; }
+        .login-input { width: 100%; padding: 14px 18px; border: 2px solid #e8e4de; border-radius: 16px; font-size: 16px; margin-bottom: 16px; }
+        .login-btn { width: 100%; padding: 14px; background: linear-gradient(135deg, var(--color-forest), var(--color-sage)); color: white; border: none; border-radius: 16px; font-size: 16px; font-weight: 600; cursor: pointer; }
         
-        /* 主系統畫面 */
-        .dashboard { opacity: 0; visibility: hidden; transition: opacity 0.6s ease; }
-        .dashboard.visible { opacity: 1; visibility: visible; }
-        .header { background: white; padding: 16px 30px; box-shadow: var(--shadow-soft); position: sticky; top: 0; z-index: 100; display: flex; justify-content: space-between; align-items: center; }
+        /* 頂部導航 */
+        .header { background: white; padding: 16px 30px; display: flex; justify-content: space-between; align-items: center; box-shadow: 0 4px 10px rgba(0,0,0,0.05); }
         .header-logo { display: flex; align-items: center; gap: 12px; text-decoration: none; }
         .header-logo-icon { width: 40px; height: 40px; background: linear-gradient(135deg, var(--color-forest), var(--color-sage)); border-radius: 10px; display: flex; align-items: center; justify-content: center; font-size: 20px; }
         .header-logo-text { font-family: 'Cormorant Garamond', serif; font-size: 22px; font-weight: 600; color: var(--color-forest); }
-        .logout-btn { padding: 8px 16px; background: transparent; border: 1px solid #ddd; border-radius: 8px; font-size: 13px; color: var(--color-muted); cursor: pointer; }
+        .logout-btn { padding: 8px 16px; border: 1px solid #ddd; background: transparent; border-radius: 8px; cursor: pointer; }
         
-        .main-content { max-width: 1200px; margin: 0 auto; padding: 30px 20px; }
-        
-        /* 數據卡片 */
-        .stats-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 20px; margin-bottom: 30px; }
-        .stat-card { background: white; padding: 24px; border-radius: var(--radius-md); box-shadow: var(--shadow-soft); text-align: center; }
-        .stat-value { font-size: 32px; font-weight: 700; color: var(--color-forest); margin-bottom: 4px; }
-        .stat-label { font-size: 14px; color: var(--color-muted); }
-        
-        /* 名單表格 */
-        .section-card { background: white; border-radius: var(--radius-lg); box-shadow: var(--shadow-soft); overflow: hidden; margin-bottom: 30px; }
-        .section-header { padding: 20px 24px; border-bottom: 1px solid #f0ebe5; background: #faf9f7; display: flex; justify-content: space-between; align-items: center;}
-        .section-title { font-family: 'Cormorant Garamond', serif; font-size: 22px; font-weight: 600; color: var(--color-dark); }
-        .badge { padding: 4px 10px; background: rgba(74, 124, 89, 0.1); color: var(--color-sage); border-radius: 20px; font-size: 12px; font-weight: 600; }
-        
-        /* 讓表格在手機上可以左右滑動，不會超出螢幕 */
-        .table-responsive { overflow-x: auto; }
-        
-        .members-table { width: 100%; border-collapse: collapse; min-width: 600px; }
-        .members-table th { padding: 16px 24px; text-align: left; font-size: 12px; font-weight: 600; text-transform: uppercase; color: var(--color-muted); border-bottom: 2px solid #f0ebe5;}
-        .members-table td { padding: 16px 24px; border-bottom: 1px solid #f5f3f0; font-size: 14px; vertical-align: middle; }
-        .member-name { display: flex; align-items: center; gap: 12px; font-weight: 500; }
-        .member-avatar { width: 36px; height: 36px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: 600; font-size: 14px; color: white; flex-shrink: 0; }
-        
-        @media (max-width: 600px) {
-            .header { padding: 12px 16px; }
-            .main-content { padding: 20px 12px; }
-            .section-header { padding: 16px; flex-direction: column; align-items: flex-start; gap: 8px; }
-        }
+        /* 嵌入的 Airtable 區域 */
+        .main-content { flex: 1; display: flex; flex-direction: column; padding: 20px; max-width: 1200px; margin: 0 auto; width: 100%; }
+        .iframe-container { flex: 1; background: white; border-radius: 16px; overflow: hidden; box-shadow: var(--shadow-elevated); border: 1px solid #e8e4de; min-height: 600px; }
+        iframe { width: 100%; height: 100%; border: none; }
     </style>
 </head>
 <body>
@@ -76,102 +41,38 @@
         <div class="login-card">
             <div class="login-logo">🌿</div>
             <h1 class="login-title">Espace Membres</h1>
-            <p class="login-subtitle">Association Française de l'Arôme</p>
-            <input type="password" class="login-input" id="passwordInput" placeholder="Entrez le mot de passe (AFai2026)" autocomplete="off">
+            <input type="password" class="login-input" id="passwordInput" placeholder="Mot de passe (AFai2026)" autocomplete="off">
             <button class="login-btn" id="loginBtn">Accéder</button>
-            <p class="login-error" id="loginError">Mot de passe incorrect.</p>
         </div>
     </div>
 
-    <div class="dashboard" id="dashboard">
-        <header class="header">
-            <a href="#" class="header-logo">
-                <div class="header-logo-icon">🌿</div>
-                <span class="header-logo-text">AFai</span>
-            </a>
-            <button class="logout-btn" id="logoutBtn">Déconnexion</button>
-        </header>
+    <header class="header">
+        <a href="#" class="header-logo">
+            <div class="header-logo-icon">🌿</div>
+            <span class="header-logo-text">AFai Répertoire</span>
+        </a>
+        <button class="logout-btn" id="logoutBtn">Déconnexion</button>
+    </header>
 
-        <main class="main-content">
-            <div class="stats-grid">
-                <div class="stat-card">
-                    <div class="stat-value">85+</div>
-                    <div class="stat-label">Membres inscrits</div>
-                </div>
-                <div class="stat-card">
-                    <div class="stat-value">2026</div>
-                    <div class="stat-label">Année en cours</div>
-                </div>
-            </div>
-
-            <div class="section-card">
-                <div class="section-header">
-                    <h2 class="section-title">Répertoire complet des membres</h2>
-                    <span class="badge">Mis à jour</span>
-                </div>
-                
-                <div class="table-responsive">
-                    <table class="members-table">
-                        <thead>
-                            <tr>
-                                <th>Nom (姓名)</th>
-                                <th>Email (信箱)</th>
-                                <th>Téléphone (電話)</th>
-                                <th>Statut (狀態)</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <tr><td><div class="member-name"><div class="member-avatar" style="background: var(--color-sage);">W</div>Wang Daming</div></td><td>wang@163.com</td><td>13800000000</td><td><span class="badge">Active</span></td></tr>
-                            <tr><td><div class="member-name"><div class="member-avatar" style="background: var(--color-lavender);">N</div>Niu Lijun</div></td><td>1018799420@qq.com</td><td>13538866118</td><td><span class="badge">Perfumer</span></td></tr>
-                            <tr><td><div class="member-name"><div class="member-avatar" style="background: var(--color-rose);">Y</div>Yang Fengwei</div></td><td>sampajanna@gmail.com</td><td>0905286165</td><td><span class="badge">Perfumer</span></td></tr>
-                            <tr><td><div class="member-name"><div class="member-avatar" style="background: var(--color-gold);">P</div>Pan Peiyi</div></td><td>peipeigrace@gmail.com</td><td>0986665759</td><td><span class="badge">Perfumer</span></td></tr>
-                            <tr><td><div class="member-name"><div class="member-avatar" style="background: #6b8e6b;">L</div>Li Huiling</div></td><td>lin640302@yahoo.com.tw</td><td>0933304038</td><td><span class="badge">Perfumer</span></td></tr>
-                            <tr><td><div class="member-name"><div class="member-avatar" style="background: #8b7b8b;">C</div>Chen Jingfen</div></td><td>chen.fefe@gmail.com</td><td>0926202026</td><td><span class="badge">Active</span></td></tr>
-                            <tr><td><div class="member-name"><div class="member-avatar" style="background: var(--color-sage);">H</div>Huang Yun</div></td><td>54854071@qq.com</td><td>15977633737</td><td><span class="badge">Perfumer</span></td></tr>
-                            <tr><td><div class="member-name"><div class="member-avatar" style="background: var(--color-lavender);">C</div>Cai Xinyi</div></td><td>redevaning@gmail.com</td><td>0922765610</td><td><span class="badge">Perfumer</span></td></tr>
-                            <tr><td><div class="member-name"><div class="member-avatar" style="background: var(--color-rose);">L</div>Li Peiru</div></td><td>medusa.star@gmail.com</td><td>0939250369</td><td><span class="badge">Perfumer</span></td></tr>
-                            <tr><td><div class="member-name"><div class="member-avatar" style="background: var(--color-gold);">W</div>Wang Yiting</div></td><td>wytnicole@gmail.com</td><td>0988218065</td><td><span class="badge">Perfumer</span></td></tr>
-                            <tr><td><div class="member-name"><div class="member-avatar" style="background: #6b8e6b;">L</div>Lin Caijie</div></td><td>a0972282598@gmail.com</td><td>0958494916</td><td><span class="badge">Perfumer</span></td></tr>
-                        </tbody>
-                    </table>
-                </div>
-            </div>
-        </main>
-    </div>
+    <main class="main-content">
+        <div class="iframe-container">
+            <iframe class="airtable-embed" src="https://airtable.com/embed/appXX10VsA0OB6AaM/tblBrrzQ6g4kHeQCc/viwKW387Tdx2sI6dR?backgroundColor=green&viewControls=on" frameborder="0" onmousewheel="" width="100%" height="100%" style="background: transparent;"></iframe>
+        </div>
+    </main>
 
     <script>
         const CORRECT_PASSWORD = 'AFai2026';
-        const SESSION_KEY = 'afai_member_auth';
-        const loginScreen = document.getElementById('loginScreen');
-        const dashboard = document.getElementById('dashboard');
-        const passwordInput = document.getElementById('passwordInput');
-        const loginError = document.getElementById('loginError');
-        const loginBtn = document.getElementById('loginBtn');
-        const logoutBtn = document.getElementById('logoutBtn');
-
-        if (sessionStorage.getItem(SESSION_KEY) === 'true') {
-            loginScreen.classList.add('hidden');
-            dashboard.classList.add('visible');
+        if (sessionStorage.getItem('afai_auth') === 'true') {
+            document.getElementById('loginScreen').classList.add('hidden');
         }
-
-        loginBtn.addEventListener('click', () => {
-            if (passwordInput.value.trim() === CORRECT_PASSWORD) {
-                sessionStorage.setItem(SESSION_KEY, 'true');
-                loginScreen.classList.add('hidden');
-                dashboard.classList.add('visible');
-            } else {
-                loginError.classList.add('show');
-                passwordInput.value = '';
-                setTimeout(() => loginError.classList.remove('show'), 3000);
+        document.getElementById('loginBtn').addEventListener('click', () => {
+            if (document.getElementById('passwordInput').value === CORRECT_PASSWORD) {
+                sessionStorage.setItem('afai_auth', 'true');
+                document.getElementById('loginScreen').classList.add('hidden');
             }
         });
-
-        passwordInput.addEventListener('keypress', (e) => {
-            if (e.key === 'Enter') loginBtn.click();
-        });
-
-        logoutBtn.addEventListener('click', () => {
-            sessionStorage.removeItem(SESSION_KEY);
+        document.getElementById('logoutBtn').addEventListener('click', () => {
+            sessionStorage.removeItem('afai_auth');
             location.reload();
         });
     </script>
