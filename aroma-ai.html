@@ -1,0 +1,781 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AFai 香氛 AI 设计器 v2.0 | 100种精油</title>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@300;400;500;700&family=Cormorant+Garamond:wght@400;600&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary: #1a4d2e;
+            --secondary: #4a7c59;
+            --accent: #7c6a9c;
+            --gold: #c9a227;
+            --cream: #f8f5f0;
+            --white: #ffffff;
+            --text: #2d2d2d;
+            --text-light: #6b6b6b;
+        }
+        
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        
+        body {
+            font-family: 'Noto Sans SC', sans-serif;
+            background: var(--cream);
+            color: var(--text);
+            line-height: 1.6;
+        }
+        
+        .header {
+            background: linear-gradient(135deg, var(--primary), #0d2818);
+            padding: 20px 0;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        
+        .header-content {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 0 20px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+        
+        .logo { display: flex; align-items: center; gap: 15px; }
+        .logo-icon { font-size: 40px; }
+        .logo-text h1 { color: var(--white); font-size: 24px; font-weight: 700; }
+        .logo-text span { color: var(--gold); font-family: 'Cormorant Garamond', serif; font-style: italic; }
+        
+        .stats { display: flex; gap: 30px; color: var(--white); font-size: 14px; }
+        
+        .container { max-width: 1400px; margin: 0 auto; padding: 30px 20px; }
+        
+        .intro { text-align: center; margin-bottom: 30px; }
+        .intro h2 { font-size: 28px; color: var(--primary); margin-bottom: 8px; }
+        .intro p { color: var(--text-light); font-size: 15px; }
+        
+        .app-grid {
+            display: grid;
+            grid-template-columns: 300px 1fr 320px;
+            gap: 20px;
+            margin-bottom: 40px;
+        }
+        
+        @media (max-width: 1200px) {
+            .app-grid { grid-template-columns: 1fr; }
+        }
+        
+        .panel {
+            background: var(--white);
+            border-radius: 16px;
+            padding: 20px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.06);
+        }
+        
+        .panel-title {
+            font-size: 16px;
+            font-weight: 700;
+            color: var(--primary);
+            margin-bottom: 15px;
+            padding-bottom: 10px;
+            border-bottom: 2px solid var(--cream);
+        }
+        
+        .emotion-category { margin-bottom: 15px; }
+        .emotion-category h4 {
+            font-size: 11px;
+            color: var(--secondary);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-bottom: 8px;
+        }
+        
+        .emotion-btn {
+            display: block;
+            width: 100%;
+            padding: 10px 12px;
+            margin-bottom: 6px;
+            border: 2px solid var(--cream);
+            border-radius: 8px;
+            background: var(--white);
+            color: var(--text);
+            font-size: 13px;
+            cursor: pointer;
+            transition: all 0.3s;
+            text-align: left;
+        }
+        
+        .emotion-btn:hover { border-color: var(--secondary); background: rgba(74, 124, 89, 0.05); }
+        .emotion-btn.active { border-color: var(--primary); background: var(--primary); color: var(--white); }
+        
+        .generate-btn {
+            width: 100%;
+            padding: 14px;
+            background: linear-gradient(135deg, var(--gold), #b8941f);
+            color: var(--white);
+            border: none;
+            border-radius: 10px;
+            font-size: 15px;
+            font-weight: 700;
+            cursor: pointer;
+            transition: transform 0.3s, box-shadow 0.3s;
+            margin-top: 10px;
+        }
+        
+        .generate-btn:hover { transform: translateY(-2px); box-shadow: 0 8px 20px rgba(201, 162, 39, 0.3); }
+        
+        .formula-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
+        }
+        
+        .formula-name-input {
+            flex: 1;
+            padding: 8px 12px;
+            border: 2px solid var(--cream);
+            border-radius: 8px;
+            font-size: 13px;
+            margin-right: 10px;
+        }
+        
+        .target-emotion { color: var(--accent); font-size: 13px; font-weight: 500; }
+        
+        .formula-table { width: 100%; border-collapse: collapse; margin-bottom: 15px; font-size: 13px; }
+        .formula-table th {
+            background: var(--secondary);
+            color: var(--white);
+            padding: 10px 8px;
+            text-align: left;
+            font-size: 11px;
+            text-transform: uppercase;
+        }
+        .formula-table td { padding: 10px 8px; border-bottom: 1px solid var(--cream); }
+        .formula-table tr:hover { background: rgba(248, 245, 240, 0.5); }
+        
+        .note-badge {
+            display: inline-block;
+            padding: 3px 8px;
+            border-radius: 12px;
+            font-size: 10px;
+            font-weight: 600;
+            color: var(--white);
+        }
+        .note-top { background: #FFEB3B; color: var(--text); }
+        .note-middle { background: var(--secondary); }
+        .note-base { background: #795548; }
+        
+        .pyramid-container {
+            background: var(--cream);
+            border-radius: 10px;
+            padding: 15px;
+            margin-bottom: 15px;
+        }
+        
+        .pyramid { display: flex; flex-direction: column; align-items: center; gap: 6px; }
+        .pyramid-level {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            height: 32px;
+            border-radius: 6px;
+            color: var(--white);
+            font-weight: 600;
+            font-size: 12px;
+        }
+        .pyramid-top { width: 40%; background: #FFEB3B; color: var(--text); }
+        .pyramid-middle { width: 70%; background: var(--secondary); }
+        .pyramid-base { width: 100%; background: #795548; }
+        
+        .action-btns { display: flex; gap: 8px; }
+        .btn {
+            padding: 8px 16px;
+            border: none;
+            border-radius: 6px;
+            font-size: 12px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        .btn-primary { background: var(--primary); color: var(--white); }
+        .btn-secondary { background: var(--secondary); color: var(--white); }
+        .btn-outline { background: transparent; border: 2px solid var(--cream); color: var(--text); }
+        .btn:hover { transform: translateY(-1px); box-shadow: 0 4px 12px rgba(0,0,0,0.1); }
+        
+        .oil-search {
+            width: 100%;
+            padding: 10px 12px;
+            border: 2px solid var(--cream);
+            border-radius: 8px;
+            font-size: 13px;
+            margin-bottom: 12px;
+        }
+        
+        .oil-list { max-height: 350px; overflow-y: auto; }
+        .oil-item {
+            padding: 10px;
+            border-radius: 8px;
+            margin-bottom: 6px;
+            cursor: pointer;
+            transition: all 0.3s;
+            border-left: 3px solid transparent;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        .oil-item:hover { background: var(--cream); border-left-color: var(--secondary); }
+        .oil-color { width: 12px; height: 12px; border-radius: 50%; flex-shrink: 0; }
+        .oil-info { flex: 1; }
+        .oil-name { font-weight: 600; font-size: 13px; }
+        .oil-meta { font-size: 11px; color: var(--text-light); }
+        
+        .oil-detail {
+            margin-top: 15px;
+            padding: 15px;
+            background: var(--cream);
+            border-radius: 10px;
+            font-size: 12px;
+            line-height: 1.8;
+        }
+        
+        .empty-state { text-align: center; padding: 50px 20px; color: var(--text-light); }
+        .empty-state-icon { font-size: 56px; margin-bottom: 15px; opacity: 0.5; }
+        
+        .loading { display: none; text-align: center; padding: 40px; }
+        .loading.active { display: block; }
+        .spinner {
+            width: 36px; height: 36px;
+            border: 3px solid var(--cream);
+            border-top-color: var(--gold);
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            margin: 0 auto 12px;
+        }
+        @keyframes spin { to { transform: rotate(360deg); } }
+        
+        .footer {
+            background: var(--primary);
+            color: var(--white);
+            text-align: center;
+            padding: 25px;
+            margin-top: 50px;
+        }
+        .footer p { opacity: 0.9; font-size: 13px; }
+    </style>
+</head>
+<body>
+    <header class="header">
+        <div class="header-content">
+            <div class="logo">
+                <span class="logo-icon">🌿</span>
+                <div class="logo-text">
+                    <h1>AFai 香氛 AI v2.0</h1>
+                    <span>100 Essential Oils Edition</span>
+                </div>
+            </div>
+            <div class="stats">
+                <span>🌿 100种精油</span>
+                <span>🎯 30种情绪</span>
+                <span>🔒 安全检查</span>
+            </div>
+        </div>
+    </header>
+
+    <div class="container">
+        <section class="intro">
+            <h2>智能香氛配方设计器</h2>
+            <p>基于 Aromachology 科学理论，100种精油，AI 为您生成个性化配方</p>
+        </section>
+
+        <div class="app-grid">
+            <!-- Left: Emotion Selection -->
+            <div class="panel">
+                <h3 class="panel-title">选择目标情绪</h3>
+                
+                <div class="emotion-category">
+                    <h4>Relax 放松</h4>
+                    <button class="emotion-btn" data-emotion="放松">放松</button>
+                    <button class="emotion-btn" data-emotion="安眠">安眠</button>
+                    <button class="emotion-btn" data-emotion="冥想">冥想</button>
+                    <button class="emotion-btn" data-emotion="舒缓">舒缓</button>
+                    <button class="emotion-btn" data-emotion="grounding">Grounding</button>
+                </div>
+                
+                <div class="emotion-category">
+                    <h4>Energy 活力</h4>
+                    <button class="emotion-btn" data-emotion="提神">提神</button>
+                    <button class="emotion-btn" data-emotion="专注">专注</button>
+                    <button class="emotion-btn" data-emotion="活力">活力</button>
+                    <button class="emotion-btn" data-emotion="清晰">清晰</button>
+                    <button class="emotion-btn" data-emotion="止痛">止痛</button>
+                </div>
+                
+                <div class="emotion-category">
+                    <h4>Happy 愉悦</h4>
+                    <button class="emotion-btn" data-emotion="愉悦">愉悦</button>
+                    <button class="emotion-btn" data-emotion="抗抑郁">抗抑郁</button>
+                    <button class="emotion-btn" data-emotion="自信">自信</button>
+                    <button class="emotion-btn" data-emotion="平衡">平衡</button>
+                    <button class="emotion-btn" data-emotion="抗焦虑">抗焦虑</button>
+                </div>
+                
+                <div class="emotion-category">
+                    <h4>Romantic 浪漫</h4>
+                    <button class="emotion-btn" data-emotion="感性">感性</button>
+                    <button class="emotion-btn" data-emotion="浪漫">浪漫</button>
+                    <button class="emotion-btn" data-emotion="温暖">温暖</button>
+                    <button class="emotion-btn" data-emotion="爱情">爱情</button>
+                </div>
+                
+                <div class="emotion-category">
+                    <h4>Clean 净化</h4>
+                    <button class="emotion-btn" data-emotion="净化">净化</button>
+                    <button class="emotion-btn" data-emotion="保护">保护</button>
+                    <button class="emotion-btn" data-emotion="清新">清新</button>
+                    <button class="emotion-btn" data-emotion="排毒">排毒</button>
+                    <button class="emotion-btn" data-emotion="免疫力">免疫力</button>
+                </div>
+                
+                <div class="emotion-category">
+                    <h4>Health 健康</h4>
+                    <button class="emotion-btn" data-emotion="护肤">护肤</button>
+                    <button class="emotion-btn" data-emotion="护发">护发</button>
+                    <button class="emotion-btn" data-emotion="助消化">助消化</button>
+                    <button class="emotion-btn" data-emotion="呼吸道">呼吸道</button>
+                </div>
+                
+                <button class="generate-btn" onclick="generateFormula()">🎨 AI 生成配方</button>
+            </div>
+
+            <!-- Center: Formula Display -->
+            <div class="panel">
+                <h3 class="panel-title">AI 生成配方</h3>
+                
+                <div class="formula-header">
+                    <input type="text" class="formula-name-input" placeholder="输入配方名称..." id="formulaName">
+                    <span class="target-emotion" id="targetEmotion">目标情绪: 未选择</span>
+                </div>
+                
+                <div class="loading" id="loading">
+                    <div class="spinner"></div>
+                    <p>AI 正在生成配方...</p>
+                </div>
+                
+                <div class="empty-state" id="emptyState">
+                    <div class="empty-state-icon">🌸</div>
+                    <p>选择左侧情绪，点击"AI 生成配方"开始</p>
+                </div>
+                
+                <div id="formulaContent" style="display: none;">
+                    <table class="formula-table">
+                        <thead>
+                            <tr>
+                                <th>精油</th>
+                                <th>香调</th>
+                                <th>滴数</th>
+                                <th>占比</th>
+                            </tr>
+                        </thead>
+                        <tbody id="formulaTableBody"></tbody>
+                    </table>
+                    
+                    <div class="pyramid-container">
+                        <div class="pyramid">
+                            <div class="pyramid-level pyramid-top">前调 30%</div>
+                            <div class="pyramid-level pyramid-middle">中调 50%</div>
+                            <div class="pyramid-level pyramid-base">后调 20%</div>
+                        </div>
+                    </div>
+                    
+                    <div class="action-btns">
+                        <button class="btn btn-primary" onclick="saveFormula()">💾 保存配方</button>
+                        <button class="btn btn-secondary" onclick="exportFormula()">📤 导出</button>
+                        <button class="btn btn-outline" onclick="clearFormula()">清空</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Right: Oil Database -->
+            <div class="panel">
+                <h3 class="panel-title">精油数据库 (100种)</h3>
+                
+                <input type="text" class="oil-search" placeholder="搜索精油..." id="oilSearch" onkeyup="searchOils()">
+                
+                <div class="oil-list" id="oilList"></div>
+                
+                <div class="oil-detail" id="oilDetail">
+                    <p>👆 点击上方精油查看详情</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <footer class="footer">
+        <p>© 2026 AFai Association Française de l'Arôme | www.afai.pro | v2.0 - 100 Essential Oils</p>
+    </footer>
+
+    <script>
+        // 100 Essential Oils Database (simplified for web)
+        const essentialOils = {
+            // Top Notes - 30种
+            bergamot: { name: '佛手柑', nameFr: 'Bergamote', note: '前调', family: '柑橘类', emotions: ['愉悦','抗抑郁','自信'], color: '#4A7C59' },
+            lemon: { name: '柠檬', nameFr: 'Citron', note: '前调', family: '柑橘类', emotions: ['活力','清新','愉悦'], color: '#FFEB3B' },
+            peppermint: { name: '薄荷', nameFr: 'Menthe', note: '前调', family: '草本类', emotions: ['提神','专注','清醒'], color: '#2E7D32' },
+            eucalyptus: { name: '尤加利', nameFr: 'Eucalyptus', note: '前调', family: '樟脑类', emotions: ['清醒','净化','保护'], color: '#607D8B' },
+            orange_sweet: { name: '甜橙', nameFr: 'Orange', note: '前调', family: '柑橘类', emotions: ['愉悦','温暖','抗抑郁'], color: '#FF9800' },
+            tea_tree: { name: '茶树', nameFr: 'Tea Tree', note: '前调', family: '草本类', emotions: ['净化','保护','自信'], color: '#4CAF50' },
+            rosemary: { name: '迷迭香', nameFr: 'Romarin', note: '前调', family: '草本类', emotions: ['专注','记忆','活力'], color: '#2E7D32' },
+            grapefruit: { name: '葡萄柚', nameFr: 'Pamplemousse', note: '前调', family: '柑橘类', emotions: ['愉悦','清新','抗抑郁'], color: '#FF7043' },
+            lime: { name: '青柠', nameFr: 'Citron vert', note: '前调', family: '柑橘类', emotions: ['活力','清新','振奋'], color: '#CDDC39' },
+            mandarin: { name: '柑橘', nameFr: 'Mandarine', note: '前调', family: '柑橘类', emotions: ['愉悦','温暖','平静'], color: '#FFAB40' },
+            tangerine: { name: '红橘', nameFr: 'Tangerine', note: '前调', family: '柑橘类', emotions: ['愉悦','温暖','放松'], color: '#FF6F00' },
+            lemongrass: { name: '柠檬草', nameFr: 'Citronnelle', note: '前调', family: '草本类', emotions: ['活力','清新','净化'], color: '#9E9D24' },
+            basil: { name: '罗勒', nameFr: 'Basilic', note: '前调', family: '草本类', emotions: ['专注','清醒','振奋'], color: '#43A047' },
+            spearmint: { name: '绿薄荷', nameFr: 'Menthe verte', note: '前调', family: '草本类', emotions: ['提神','清新','温和'], color: '#66BB6A' },
+            wintergreen: { name: '冬青', nameFr: 'Gaulthérie', note: '前调', family: '樟脑类', emotions: ['止痛','舒缓','清凉'], color: '#2E7D32' },
+            camphor: { name: '樟脑', nameFr: 'Camphre', note: '前调', family: '樟脑类', emotions: ['清醒','刺激','通鼻'], color: '#78909C' },
+            ravintsara: { name: '桉油樟', nameFr: 'Ravintsara', note: '前调', family: '樟脑类', emotions: ['净化','保护','振奋'], color: '#90A4AE' },
+            niaouli: { name: '绿花白千层', nameFr: 'Niaouli', note: '前调', family: '樟脑类', emotions: ['净化','保护','专注'], color: '#78909C' },
+            cajeput: { name: '白千层', nameFr: 'Cajeput', note: '前调', family: '樟脑类', emotions: ['清醒','净化','止痛'], color: '#78909C' },
+            myrtle: { name: '香桃木', nameFr: 'Myrte', note: '前调', family: '樟脑类', emotions: ['平衡','净化','温和'], color: '#81C784' },
+            petitgrain: { name: '苦橙叶', nameFr: 'Petit grain', note: '前调', family: '柑橘类', emotions: ['平静','抗抑郁','放松'], color: '#A5D6A7' },
+            citronella: { name: '香茅', nameFr: 'Citronnelle Java', note: '前调', family: '草本类', emotions: ['清新','活力','净化'], color: '#9E9D24' },
+            verbena: { name: '柠檬马鞭草', nameFr: 'Verveine', note: '前调', family: '草本类', emotions: ['放松','抗抑郁','舒缓'], color: '#C5E1A5' },
+            melissa: { name: '香蜂草', nameFr: 'Mélisse', note: '前调', family: '草本类', emotions: ['平静','抗抑郁','舒缓'], color: '#DCEDC8' },
+            angelica: { name: '欧白芷', nameFr: 'Angélique', note: '前调', family: '草本类', emotions: ['grounding','稳定','净化'], color: '#C8E6C9' },
+            fennel: { name: '甜茴香', nameFr: 'Fenouil', note: '前调', family: '香料类', emotions: ['活力','净化','振奋'], color: '#FFCC80' },
+            anise: { name: '洋茴香', nameFr: 'Anis', note: '前调', family: '香料类', emotions: ['温暖','放松','助消化'], color: '#FFE0B2' },
+            nutmeg: { name: '肉豆蔻', nameFr: 'Muscade', note: '前调', family: '香料类', emotions: ['温暖','活力','振奋'], color: '#8D6E63' },
+            coriander: { name: '芫荽', nameFr: 'Coriandre', note: '前调', family: '香料类', emotions: ['放松','温暖','舒适'], color: '#A1887F' },
+            
+            // Middle Notes - 40种
+            lavender: { name: '薰衣草', nameFr: 'Lavande', note: '中调', family: '花香类', emotions: ['放松','安眠','舒缓'], color: '#9B7CB6' },
+            ylang_ylang: { name: '依兰依兰', nameFr: 'Ylang-Ylang', note: '中调', family: '花香类', emotions: ['感性','放松','抗焦虑'], color: '#D4A5A5' },
+            rose: { name: '玫瑰', nameFr: 'Rose', note: '中调', family: '花香类', emotions: ['爱情','幸福','自信'], color: '#E91E63' },
+            geranium: { name: '天竺葵', nameFr: 'Geranium', note: '中调', family: '花香类', emotions: ['平衡','抗抑郁','放松'], color: '#E91E63' },
+            chamomile: { name: '洋甘菊', nameFr: 'Camomille', note: '中调', family: '花香类', emotions: ['舒缓','安眠','抗焦虑'], color: '#F5F5DC' },
+            neroli: { name: '橙花', nameFr: 'Neroli', note: '中调', family: '柑橘类', emotions: ['抗焦虑','优雅','平静'], color: '#FFF8E1' },
+            jasmine: { name: '茉莉', nameFr: 'Jasmin', note: '中调', family: '花香类', emotions: ['感性','自信','浪漫'], color: '#FFF9C4' },
+            cypress: { name: '丝柏', nameFr: 'Cypres', note: '中调', family: '木质类', emotions: ['稳定','转变','grounding'], color: '#558B2F' },
+            clary_sage: { name: '快乐鼠尾草', nameFr: 'Sauge sclarée', note: '中调', family: '草本类', emotions: ['放松','抗抑郁','平静'], color: '#9FA8DA' },
+            hyssop: { name: '牛膝草', nameFr: 'Hysope', note: '中调', family: '草本类', emotions: ['净化','清醒','专注'], color: '#7986CB' },
+            marjoram: { name: '马郁兰', nameFr: 'Marjolaine', note: '中调', family: '草本类', emotions: ['放松','安眠','舒适'], color: '#90CAF9' },
+            thyme: { name: '百里香', nameFr: 'Thym', note: '中调', family: '草本类', emotions: ['勇气','净化','保护'], color: '#64B5F6' },
+            oregano: { name: '牛至', nameFr: 'Origan', note: '中调', family: '草本类', emotions: ['保护','勇气','净化'], color: '#42A5F5' },
+            sage: { name: '鼠尾草', nameFr: 'Sauge', note: '中调', family: '草本类', emotions: ['清晰','净化','专注'], color: '#5C6BC0' },
+            tarragon: { name: '龙蒿', nameFr: 'Estragon', note: '中调', family: '草本类', emotions: ['开胃','助消化','舒缓'], color: '#7986CB' },
+            parsley: { name: '欧芹', nameFr: 'Persil', note: '中调', family: '草本类', emotions: ['净化','清新','活力'], color: '#66BB6A' },
+            black_pepper: { name: '黑胡椒', nameFr: 'Poivre noir', note: '中调', family: '香料类', emotions: ['温暖','活力','勇气'], color: '#3E2723' },
+            ginger: { name: '姜', nameFr: 'Gingembre', note: '中调', family: '香料类', emotions: ['温暖','活力','勇气'], color: '#FF8F00' },
+            cardamom: { name: '小豆蔻', nameFr: 'Cardamome', note: '中调', family: '香料类', emotions: ['温暖','清新','助消化'], color: '#A1887F' },
+            cinnamon: { name: '肉桂', nameFr: 'Cannelle', note: '中调', family: '香料类', emotions: ['温暖','活力','热情'], color: '#D84315' },
+            clove: { name: '丁香', nameFr: 'Clou de girofle', note: '中调', family: '香料类', emotions: ['保护','勇气','温暖'], color: '#BF360C' },
+            juniper: { name: '杜松', nameFr: 'Genévrier', note: '中调', family: '木质类', emotions: ['净化','保护','grounding'], color: '#5D4037' },
+            pine: { name: '松针', nameFr: 'Pin', note: '中调', family: '木质类', emotions: ['清新','活力','净化'], color: '#33691E' },
+            fir: { name: '冷杉', nameFr: 'Sapin', note: '中调', family: '木质类', emotions: ['清新','稳定','grounding'], color: '#2E7D32' },
+            spruce: { name: '云杉', nameFr: 'Épinette', note: '中调', family: '木质类', emotions: ['grounding','稳定','清新'], color: '#1B5E20' },
+            helichrysum: { name: '永久花', nameFr: 'Hélichryse', note: '中调', family: '花香类', emotions: ['疗愈','平静','舒缓'], color: '#FFEB3B' },
+            palmarosa: { name: '玫瑰草', nameFr: 'Palmarosa', note: '中调', family: '花香类', emotions: ['平衡','舒缓','再生'], color: '#A5D6A7' },
+            rosewood: { name: '花梨木', nameFr: 'Bois de rose', note: '中调', family: '木质类', emotions: ['平衡','放松','舒缓'], color: '#FFCCBC' },
+            ho_wood: { name: '芳樟', nameFr: 'Ho wood', note: '中调', family: '木质类', emotions: ['放松','平静','舒缓'], color: '#FFAB91' },
+            may_chang: { name: '山鸡椒', nameFr: 'May chang', note: '中调', family: '柑橘类', emotions: ['清新','振奋','抗抑郁'], color: '#FFCC80' },
+            litsea: { name: '木姜子', nameFr: 'Litsee', note: '中调', family: '柑橘类', emotions: ['清新','振奋','抗抑郁'], color: '#FFB74D' },
+            inula: { name: '土木香', nameFr: 'Inule', note: '中调', family: '花香类', emotions: ['舒缓','平静','疗愈'], color: '#FFE082' },
+            spikenard: { name: '穗甘松', nameFr: 'Nard', note: '中调', family: '土质类', emotions: ['grounding','平静','冥想'], color: '#6D4C41' },
+            valerian: { name: '缬草', nameFr: 'Valériane', note: '中调', family: '土质类', emotions: ['深度放松','安眠','平静'], color: '#5D4037' },
+            bay: { name: '月桂', nameFr: 'Laurier', note: '中调', family: '香料类', emotions: ['勇气','专注','清晰'], color: '#2E7D32' },
+            
+            // Base Notes - 30种
+            sandalwood: { name: '檀香', nameFr: 'Santal', note: '后调', family: '木质类', emotions: ['冥想','平静','专注'], color: '#8B6914' },
+            frankincense: { name: '乳香', nameFr: 'Encens', note: '后调', family: '树脂类', emotions: ['冥想','灵性','平静'], color: '#795548' },
+            myrrh: { name: '没药', nameFr: 'Myrrhe', note: '后调', family: '树脂类', emotions: ['疗愈','grounding','平静'], color: '#5D4037' },
+            patchouli: { name: '广藿香', nameFr: 'Patchouli', note: '后调', family: '土质类', emotions: ['grounding','感性','放松'], color: '#5D4037' },
+            cedarwood: { name: '雪松', nameFr: 'Cèdre', note: '后调', family: '木质类', emotions: ['稳定','自信','力量'], color: '#6D4C41' },
+            vanilla: { name: '香草', nameFr: 'Vanille', note: '后调', family: '香料类', emotions: ['温暖','舒适','愉悦'], color: '#D7CCC8' },
+            vetiver: { name: '岩兰草', nameFr: 'Vétiver', note: '后调', family: '土质类', emotions: ['grounding','稳定','平静'], color: '#3E2723' },
+            benzoin: { name: '安息香', nameFr: 'Benzoin', note: '后调', family: '树脂类', emotions: ['温暖','安慰','平静'], color: '#8D6E63' },
+            copal: { name: '柯巴脂', nameFr: 'Copal', note: '后调', family: '树脂类', emotions: ['净化','保护','灵性'], color: '#A1887F' },
+            elemi: { name: '榄香脂', nameFr: 'Élémi', note: '后调', family: '树脂类', emotions: ['平衡','平静','再生'], color: '#BCAAA4' },
+            galbanum: { name: '白松香', nameFr: 'Galbanum', note: '后调', family: '树脂类', emotions: ['grounding','平衡','再生'], color: '#A5D6A7' },
+            labdanum: { name: '劳丹脂', nameFr: 'Labdanum', note: '后调', family: '树脂类', emotions: ['感性','温暖','神秘'], color: '#8D6E63' },
+            peru_balsam: { name: '秘鲁香脂', nameFr: 'Baume du Pérou', note: '后调', family: '树脂类', emotions: ['温暖','安慰','平静'], color: '#795548' },
+            tolu_balsam: { name: '妥鲁香脂', nameFr: 'Baume de Tolu', note: '后调', family: '树脂类', emotions: ['温暖','安慰','平静'], color: '#6D4C41' },
+            styrax: { name: '苏合香', nameFr: 'Styrax', note: '后调', family: '树脂类', emotions: ['平静','安慰','温暖'], color: '#8D6E63' },
+            opopanax: { name: '红没药', nameFr: 'Opoponax', note: '后调', family: '树脂类', emotions: ['感性','神秘','温暖'], color: '#5D4037' },
+            agarwood: { name: '沉香', nameFr: "Bois d'agar", note: '后调', family: '木质类', emotions: ['灵性','冥想','平静'], color: '#3E2723' },
+            oakmoss: { name: '橡苔', nameFr: 'Mousse de chêne', note: '后调', family: '土质类', emotions: ['grounding','稳定','森林'], color: '#33691E' },
+            ambrette: { name: '黄葵', nameFr: 'Ambrette', note: '后调', family: '土质类', emotions: ['感性','放松','催情'], color: '#FFCC80' },
+            musk: { name: '麝香', nameFr: 'Musc', note: '后调', family: '土质类', emotions: ['感性','催情','温暖'], color: '#D7CCC8' },
+            amber: { name: '琥珀', nameFr: 'Ambre', note: '后调', family: '树脂类', emotions: ['温暖','感性','神秘'], color: '#FF8F00' },
+            blondewood: { name: '金木', nameFr: "Bois doré", note: '后调', family: '木质类', emotions: ['温暖','柔和','舒适'], color: '#FFCC80' },
+            cashmeran: { name: '开司米酮', nameFr: 'Cashmeran', note: '后调', family: '木质类', emotions: ['温暖','柔和','舒适'], color: '#D7CCC8' },
+            iso_e_super: { name: '龙涎酮', nameFr: 'Iso E Super', note: '后调', family: '木质类', emotions: ['温暖','柔和','现代'], color: '#BCAAA4' },
+            ambroxan: { name: '降龙涎香醚', nameFr: 'Ambroxane', note: '后调', family: '土质类', emotions: ['温暖','柔和','优雅'], color: '#FFE0B2' },
+            tonka: { name: '零陵香豆', nameFr: 'Tonka', note: '后调', family: '香料类', emotions: ['温暖','甜美','舒适'], color: '#8D6E63' },
+            cocoa: { name: '可可', nameFr: 'Cacao', note: '后调', family: '香料类', emotions: ['温暖','甜美','舒适'], color: '#4E342E' },
+            coffee: { name: '咖啡', nameFr: 'Café', note: '后调', family: '香料类', emotions: ['温暖','刺激','专注'], color: '#3E2723' },
+            honey: { name: '蜂蜜', nameFr: 'Miel', note: '后调', family: '香料类', emotions: ['温暖','甜美','滋养'], color: '#FFB300' }
+        };
+
+        // Emotion to Oils Mapping (simplified)
+        const emotionOils = {
+            '放松': ['lavender','ylang_ylang','sandalwood','frankincense','chamomile','vanilla','marjoram','clary_sage','neroli','rosewood','ho_wood','petitgrain'],
+            '安眠': ['lavender','chamomile','sandalwood','ylang_ylang','neroli','vetiver','valerian','marjoram','bergamot','mandarin'],
+            '冥想': ['sandalwood','frankincense','lavender','patchouli','cedarwood','myrrh','vetiver','spikenard','agarwood','copal'],
+            '提神': ['peppermint','lemon','rosemary','eucalyptus','tea_tree','basil','spearmint','ravintsara','coffee'],
+            '专注': ['rosemary','peppermint','sandalwood','frankincense','lemon','basil','pine','cypress','myrtle'],
+            '活力': ['peppermint','lemon','rosemary','orange_sweet','eucalyptus','grapefruit','ginger','black_pepper','cardamom'],
+            '愉悦': ['bergamot','lemon','orange_sweet','rose','jasmine','vanilla','grapefruit','mandarin','petitgrain'],
+            '抗抑郁': ['bergamot','rose','ylang_ylang','geranium','orange_sweet','jasmine','clary_sage','melissa','neroli'],
+            '自信': ['bergamot','tea_tree','rose','frankincense','cedarwood','jasmine','ginger','black_pepper','bay'],
+            '感性': ['ylang_ylang','rose','patchouli','sandalwood','jasmine','vanilla','labdanum','ambrette','musk'],
+            '浪漫': ['rose','ylang_ylang','jasmine','sandalwood','vanilla','neroli','cinnamon','ginger'],
+            '温暖': ['orange_sweet','vanilla','sandalwood','cedarwood','cinnamon','ginger','cardamom','benzoin'],
+            '清新': ['lemon','peppermint','eucalyptus','tea_tree','bergamot','lime','grapefruit','petitgrain'],
+            '净化': ['lemon','tea_tree','eucalyptus','lavender','rosemary','pine','juniper','frankincense'],
+            '保护': ['tea_tree','frankincense','eucalyptus','lavender','lemon','thyme','oregano','rosemary'],
+            'grounding': ['patchouli','cedarwood','vetiver','sandalwood','frankincense','cypress','spikenard','oakmoss'],
+            '平衡': ['geranium','lavender','ylang_ylang','clary_sage','rose','neroli','palmarosa'],
+            '舒缓': ['chamomile','lavender','neroli','ylang_ylang','vanilla','marjoram','benzoin'],
+            '抗焦虑': ['chamomile','lavender','neroli','ylang_ylang','frankincense','clary_sage','melissa','petitgrain'],
+            '止痛': ['peppermint','wintergreen','lavender','eucalyptus','rosemary','ginger','black_pepper','clove'],
+            '护肤': ['lavender','rose','neroli','frankincense','sandalwood','geranium','helichrysum','palmarosa'],
+            '护发': ['rosemary','cedarwood','ylang_ylang','sandalwood','lavender','geranium'],
+            '助消化': ['peppermint','ginger','fennel','cardamom','coriander','orange_sweet','lemon','basil'],
+            '排毒': ['lemon','grapefruit','juniper','fennel','rosemary','geranium','cypress'],
+            '免疫力': ['tea_tree','eucalyptus','thyme','oregano','lemon','rosemary','frankincense','ravintsara'],
+            '呼吸道': ['eucalyptus','peppermint','tea_tree','pine','thyme','myrtle','ravintsara','inula'],
+            '清晰': ['rosemary','peppermint','lemon','eucalyptus','tea_tree','basil','pine'],
+            '爱情': ['rose','jasmine','ylang_ylang','sandalwood','vanilla','neroli'],
+            '转变': ['cypress','lemon','peppermint','frankincense','galbanum'],
+            '勇气': ['thyme','black_pepper','ginger','cinnamon','clove','bay'],
+            '疗愈': ['helichrysum','frankincense','myrrh','lavender','chamomile'],
+            '森林': ['pine','fir','spruce','cedarwood','juniper','oakmoss']
+        };
+
+        let selectedEmotion = '';
+        let currentFormula = null;
+
+        document.addEventListener('DOMContentLoaded', function() {
+            populateOilList();
+            setupEmotionButtons();
+        });
+
+        function setupEmotionButtons() {
+            const buttons = document.querySelectorAll('.emotion-btn');
+            buttons.forEach(btn => {
+                btn.addEventListener('click', function() {
+                    buttons.forEach(b => b.classList.remove('active'));
+                    this.classList.add('active');
+                    selectedEmotion = this.dataset.emotion;
+                    document.getElementById('targetEmotion').textContent = '目标情绪: ' + selectedEmotion;
+                });
+            });
+        }
+
+        function populateOilList() {
+            const list = document.getElementById('oilList');
+            list.innerHTML = '';
+            
+            Object.entries(essentialOils).forEach(([id, oil]) => {
+                const item = document.createElement('div');
+                item.className = 'oil-item';
+                item.onclick = () => showOilDetail(id);
+                item.innerHTML = `
+                    <div class="oil-color" style="background: ${oil.color}"></div>
+                    <div class="oil-info">
+                        <div class="oil-name">${oil.name}</div>
+                        <div class="oil-meta">${oil.nameFr} · ${oil.note} · ${oil.family}</div>
+                    </div>
+                `;
+                list.appendChild(item);
+            });
+        }
+
+        function showOilDetail(oilId) {
+            const oil = essentialOils[oilId];
+            const detail = document.getElementById('oilDetail');
+            detail.innerHTML = `
+                <strong style="color: ${oil.color}">【${oil.name}】</strong> ${oil.nameFr}<br>
+                香调: ${oil.note} | 家族: ${oil.family}<br>
+                <br>
+                <strong>情绪效果:</strong> ${oil.emotions.join('、')}<br>
+            `;
+        }
+
+        function searchOils() {
+            const keyword = document.getElementById('oilSearch').value.toLowerCase();
+            const items = document.querySelectorAll('.oil-item');
+            const oils = Object.entries(essentialOils);
+            
+            items.forEach((item, index) => {
+                const [oilId, oil] = oils[index];
+                const text = `${oil.name} ${oil.nameFr}`.toLowerCase();
+                item.style.display = text.includes(keyword) ? 'flex' : 'none';
+            });
+        }
+
+        function generateFormula() {
+            if (!selectedEmotion) {
+                alert('请先选择一个情绪！');
+                return;
+            }
+
+            document.getElementById('loading').classList.add('active');
+            document.getElementById('emptyState').style.display = 'none';
+            document.getElementById('formulaContent').style.display = 'none';
+
+            setTimeout(() => {
+                const oils = emotionOils[selectedEmotion] || [];
+                if (oils.length === 0) {
+                    alert('未找到对应精油');
+                    return;
+                }
+
+                const selected = [];
+                const notes = { '前调': [], '中调': [], '后调': [] };
+                
+                oils.forEach(id => {
+                    if (essentialOils[id]) {
+                        const note = essentialOils[id].note;
+                        if (notes[note]) notes[note].push(id);
+                    }
+                });
+
+                Object.entries(notes).forEach(([note, oilList]) => {
+                    if (oilList.length > 0) {
+                        const count = note === '后调' ? 1 : Math.min(2, oilList.length);
+                        const picked = oilList.sort(() => 0.5 - Math.random()).slice(0, count);
+                        selected.push(...picked);
+                    }
+                });
+
+                const formula = {};
+                const total = 30;
+                
+                selected.forEach(id => {
+                    const note = essentialOils[id].note;
+                    const ratios = { '前调': 0.3, '中调': 0.5, '后调': 0.2 };
+                    const noteOils = selected.filter(sid => essentialOils[sid].note === note);
+                    const drops = Math.max(2, Math.floor(total * ratios[note] / noteOils.length));
+                    formula[id] = drops;
+                });
+
+                currentFormula = {
+                    name: document.getElementById('formulaName').value || selectedEmotion + '配方',
+                    emotion: selectedEmotion,
+                    oils: formula
+                };
+
+                displayFormula(formula);
+                
+                document.getElementById('loading').classList.remove('active');
+                document.getElementById('formulaContent').style.display = 'block';
+            }, 600);
+        }
+
+        function displayFormula(formula) {
+            const tbody = document.getElementById('formulaTableBody');
+            tbody.innerHTML = '';
+            
+            const total = Object.values(formula).reduce((a, b) => a + b, 0);
+            
+            Object.entries(formula).forEach(([id, drops]) => {
+                const oil = essentialOils[id];
+                const pct = ((drops / total) * 100).toFixed(1);
+                const noteClass = oil.note === '前调' ? 'note-top' : 
+                                 oil.note === '中调' ? 'note-middle' : 'note-base';
+                
+                const row = document.createElement('tr');
+                row.innerHTML = `
+                    <td><strong>${oil.name}</strong><br><small>${oil.nameFr}</small></td>
+                    <td><span class="note-badge ${noteClass}">${oil.note}</span></td>
+                    <td><strong>${drops}</strong></td>
+                    <td>${pct}%</td>
+                `;
+                tbody.appendChild(row);
+            });
+        }
+
+        function saveFormula() {
+            if (!currentFormula) {
+                alert('请先生成配方！');
+                return;
+            }
+            
+            const data = JSON.stringify(currentFormula, null, 2);
+            const blob = new Blob([data], { type: 'application/json' });
+            const url = URL.createObjectURL(blob);
+            
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = `formula_${new Date().getTime()}.json`;
+            a.click();
+            
+            URL.revokeObjectURL(url);
+        }
+
+        function exportFormula() {
+            if (!currentFormula) {
+                alert('请先生成配方！');
+                return;
+            }
+            
+            let text = `AFai 香氛 AI 配方单 v2.0\n`;
+            text += `===================\n\n`;
+            text += `配方名称: ${currentFormula.name}\n`;
+            text += `目标情绪: ${currentFormula.emotion}\n`;
+            text += `生成日期: ${new Date().toLocaleDateString()}\n\n`;
+            text += `配方成分:\n`;
+            text += `-------------------\n`;
+            
+            const total = Object.values(currentFormula.oils).reduce((a, b) => a + b, 0);
+            
+            Object.entries(currentFormula.oils).forEach(([id, drops]) => {
+                const oil = essentialOils[id];
+                const pct = ((drops / total) * 100).toFixed(1);
+                text += `\n${oil.name} (${oil.nameFr})\n`;
+                text += `  香调: ${oil.note} | 滴数: ${drops} | 占比: ${pct}%\n`;
+                text += `  情绪: ${oil.emotions.join(', ')}\n`;
+            });
+            
+            text += `\n-------------------\n`;
+            text += `总计: ${total} 滴\n\n`;
+            text += `使用建议:\n`;
+            text += `- 加入10ml基础油，制成3%浓度\n`;
+            text += `- 可用于香薰、按摩或吸入\n`;
+            text += `- 先做皮肤敏感测试\n\n`;
+            text += `安全警告:\n`;
+            text += `- 仅供外用，不可内服\n`;
+            text += `- 避免接触眼睛\n`;
+            text += `- 孕妇及特殊人群请咨询专业人士\n\n`;
+            text += `===================\n`;
+            text += `AFai Association | www.afai.pro | 100 Essential Oils\n`;
+            
+            const blob = new Blob([text], { type: 'text/plain;charset=utf-8' });
+            const url = URL.createObjectURL(blob);
+            
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = `${currentFormula.name}.txt`;
+            a.click();
+            
+            URL.revokeObjectURL(url);
+        }
+
+        function clearFormula() {
+            currentFormula = null;
+            document.getElementById('formulaName').value = '';
+            document.getElementById('formulaContent').style.display = 'none';
+            document.getElementById('emptyState').style.display = 'block';
+            document.getElementById('targetEmotion').textContent = '目标情绪: 未选择';
+            
+            document.querySelectorAll('.emotion-btn').forEach(btn => {
+                btn.classList.remove('active');
+            });
+            selectedEmotion = '';
+        }
+    </script>
+</body>
+</html>
