@@ -3,107 +3,99 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Espace Membres | AFai - Association Française de l'Arôme</title>
-    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@600&family=DM+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+    <title>AFai - Espace Membres Premium</title>
     <style>
-        :root {
-            --color-forest: #1a4d2e; --color-sage: #4a7c59;
-            --color-cream: #f8f5f0; --color-dark: #2d2d2d;
-            --shadow-elevated: 0 10px 40px rgba(26, 77, 46, 0.15);
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        body {
+            font-family: Georgia, serif;
+            background: linear-gradient(135deg, #2C5F2D 0%, #97BC62 50%, #F5F3EE 100%);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
         }
-        * { margin: 0; padding: 0; box-sizing: border-box; }
-        
-        /* 强制页面填满高度，防止出现双滚动条 */
-        html, body { height: 100%; width: 100%; overflow: hidden; background: var(--color-cream); font-family: 'DM Sans', sans-serif; }
-        
-        /* 登录遮罩层 */
-        .login-screen { position: fixed; inset: 0; background: linear-gradient(135deg, var(--color-forest) 0%, #0d2818 100%); display: flex; align-items: center; justify-content: center; z-index: 1000; transition: all 0.6s cubic-bezier(0.4, 0, 0.2, 1); }
-        .login-screen.hidden { opacity: 0; visibility: hidden; transform: translateY(-20px); }
-        .login-card { background: rgba(255, 255, 255, 0.98); padding: 50px 40px; border-radius: 28px; box-shadow: var(--shadow-elevated); text-align: center; width: 90%; max-width: 420px; }
-        .login-logo { width: 80px; height: 80px; margin: 0 auto 24px; background: linear-gradient(135deg, var(--color-forest), var(--color-sage)); border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 36px; color: white; }
-        .login-title { font-family: 'Cormorant Garamond', serif; font-size: 32px; font-weight: 600; color: var(--color-forest); margin-bottom: 30px; }
-        .login-input { width: 100%; padding: 16px 20px; border: 2px solid #e8e4de; border-radius: 16px; font-size: 16px; margin-bottom: 20px; outline: none; transition: border-color 0.3s; }
-        .login-input:focus { border-color: var(--color-sage); }
-        .login-btn { width: 100%; padding: 16px; background: var(--color-forest); color: white; border: none; border-radius: 16px; font-size: 18px; font-weight: 600; cursor: pointer; transition: transform 0.2s; }
-        .login-btn:hover { background: #0d2818; transform: translateY(-2px); }
-
-        /* 主界面结构 */
-        .app-container { display: flex; flex-direction: column; height: 100vh; width: 100%; }
-        
-        .header { background: white; padding: 14px 30px; display: flex; justify-content: space-between; align-items: center; box-shadow: 0 4px 15px rgba(0,0,0,0.06); z-index: 10; }
-        .header-logo { display: flex; align-items: center; gap: 12px; text-decoration: none; }
-        .header-logo-icon { font-size: 24px; }
-        .header-logo-text { font-family: 'Cormorant Garamond', serif; font-size: 24px; font-weight: 600; color: var(--color-forest); }
-        .logout-btn { padding: 8px 18px; border: 1px solid #ddd; background: transparent; border-radius: 10px; cursor: pointer; font-size: 14px; font-weight: 500; color: var(--color-muted); }
-
-        /* Airtable 区域：占据所有剩余空间 */
-        .content-area { flex: 1; position: relative; width: 100%; height: 100%; }
-        iframe { position: absolute; top: 0; left: 0; width: 100%; height: 100%; border: none; }
-
-        @media (max-width: 600px) {
-            .header { padding: 12px 15px; }
-            .header-logo-text { font-size: 20px; }
+        .container {
+            display: flex;
+            gap: 30px;
+            flex-wrap: wrap;
+            justify-content: center;
+            max-width: 1000px;
+            width: 100%;
+        }
+        .card {
+            background: rgba(255,255,255,0.95);
+            border-radius: 20px;
+            padding: 40px 35px;
+            text-align: center;
+            box-shadow: 0 8px 32px rgba(0,0,0,0.12);
+            flex: 1;
+            min-width: 280px;
+            max-width: 420px;
+            transition: transform 0.3s, box-shadow 0.3s;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        .card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 12px 40px rgba(0,0,0,0.18);
+        }
+        .card-icon { font-size: 56px; margin-bottom: 16px; }
+        .card h2 { font-size: 22px; color: #2C5F2D; margin-bottom: 12px; font-weight: 600; }
+        .card p { color: #666; font-size: 14px; line-height: 1.6; margin-bottom: 24px; flex-grow: 1; }
+        .card-btn {
+            display: inline-block;
+            padding: 14px 32px;
+            background: linear-gradient(135deg, #2C5F2D, #97BC62);
+            color: white;
+            border: none;
+            border-radius: 30px;
+            font-size: 15px;
+            font-weight: 600;
+            text-decoration: none;
+            cursor: pointer;
+            transition: opacity 0.2s;
+        }
+        .card-btn:hover { opacity: 0.85; }
+        .card-btn.secondary {
+            background: linear-gradient(135deg, #8B5CF6, #A78BFA);
+        }
+        .header {
+            text-align: center;
+            margin-bottom: 40px;
+            width: 100%;
+        }
+        .header h1 { color: white; font-size: 32px; text-shadow: 0 2px 8px rgba(0,0,0,0.3); margin-bottom: 8px; }
+        .header p { color: rgba(255,255,255,0.9); font-size: 16px; }
+        .badge { 
+            display: inline-block; background: #FF6B6B; color: white; 
+            font-size: 11px; padding: 3px 8px; border-radius: 20px; 
+            margin-top: 10px; font-family: sans-serif;
         }
     </style>
 </head>
 <body>
-
-    <div class="login-screen" id="loginScreen">
-        <div class="login-card">
-            <div class="login-logo">🌿</div>
-            <h1 class="login-title">Espace Membres</h1>
-            <input type="password" class="login-input" id="passwordInput" placeholder="Mot de passe (AFai2026)" autocomplete="off">
-            <button class="login-btn" id="loginBtn">Entrer</button>
+    <div style="width:100%; max-width:1000px;">
+        <div class="header">
+            <h1>🌿 AFAI - Espace Privé</h1>
+            <p>Association Française Internationale d'Aromathérapie</p>
+        </div>
+        <div class="container">
+            <div class="card">
+                <div class="card-icon">👥</div>
+                <h2>Répertoire des Membres</h2>
+                <p>Consulter l'annuaire complet des membres certifiés AFAI, leurs spécialisations et coordonnées.</p>
+                <a href="https://best2030fr.github.io/afai-members/" class="card-btn">Accéder au Répertoire</a>
+            </div>
+            <div class="card">
+                <div class="card-icon">✨</div>
+                <h2>IA Création de Parfum</h2>
+                <p>Créateur de parfum intelligent par émotions. Choisissez votre humeur et l'IA génère une formule d'huiles essentielles unique parmi 100 huiles.</p>
+                <span class="badge">100+ Huiles</span>
+                <a href="https://best2030fr.github.io/afai-members/aroma-ai.html" class="card-btn secondary" style="margin-top:16px;">🎯 Créer mon Parfum</a>
+            </div>
         </div>
     </div>
-
-    <div class="app-container">
-        <header class="header">
-            <a href="#" class="header-logo">
-                <span class="header-logo-icon">🌿</span>
-                <span class="header-logo-text">AFai Répertoire</span>
-            </a>
-            <button class="logout-btn" id="logoutBtn">Déconnexion</button>
-        </header>
-
-        <main class="content-area">
-            <iframe src="https://airtable.com/embed/appfmRmjYiUjarkDn/shrh1wp2U3csgbCcL?backgroundColor=green&viewControls=on" 
-                    frameborder="0" 
-                    onmousewheel="" 
-                    width="100%" 
-                    height="100%" 
-                    style="background: transparent;">
-            </iframe>
-        </main>
-    </div>
-
-    <script>
-        const PASS = 'AFai2026';
-        const screen = document.getElementById('loginScreen');
-        const input = document.getElementById('passwordInput');
-        
-        // 检查是否已登录
-        if (sessionStorage.getItem('afai_authenticated') === 'true') {
-            screen.classList.add('hidden');
-        }
-
-        function tryLogin() {
-            if (input.value === PASS) {
-                sessionStorage.setItem('afai_authenticated', 'true');
-                screen.classList.add('hidden');
-            } else {
-                alert('Mot de passe incorrect.');
-                input.value = '';
-            }
-        }
-
-        document.getElementById('loginBtn').addEventListener('click', tryLogin);
-        input.addEventListener('keypress', (e) => { if (e.key === 'Enter') tryLogin(); });
-        
-        document.getElementById('logoutBtn').addEventListener('click', () => {
-            sessionStorage.removeItem('afai_authenticated');
-            location.reload();
-        });
-    </script>
 </body>
 </html>
