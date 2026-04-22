@@ -145,148 +145,187 @@
 </div>
 
 <script>
-// ============ MEMBER DATA (from Airtable + local file mapping) ============
-// Each entry: pinyin name, email, baidu share link for cert images
-// "certs" array: [{name: "certificate name", url: "BAIDU_SHARE_URL"}]
 const MEMBER_DATA = {
-  "redevaning@gmail.com": {
-    name: "Cai Xinyi",
-    pinyin: "Cai Xinyi",
-    phone: "0922765610",
-    status: "2026/0116",
-    notes: "Mood Color Perfumer",
-    address: "4th Floor, No. 32, Alley 2, Lane 156, Wuxing Street, Xinyi District, Taipei City",
-    certs: [
-      { name: "台湾蔡欣怡 情绪色彩调香师", url: "https://drive.google.com/file/d/1PLACEHOLDER/view", note: "Please contact AFai for certificate image" }
-    ]
-  },
-  "guo55661640@163.com": {
-    name: "Guo Hong",
-    pinyin: "Guo Hong",
-    certs: []
-  },
-  "peipeigrace@gmail.com": {
-    name: "Pan Peiyi",
-    pinyin: "Pan Peiyi",
-    certs: []
-  },
-  "": {
-    name: "Qiu Huilin",
-    pinyin: "Qiu Huilin",
-    certs: []
-  },
-  "cbenxuanling@qq.com": {
-    name: "Chen Dongling",
-    pinyin: "Chen Dongling",
-    certs: []
-  },
-  "ivan5954@icloud.com": {
-    name: "He Zhihao",
-    pinyin: "He Zhihao",
-    certs: []
-  },
-  "chiufang11@yahoo.com.tw": {
-    name: "Wu Qiufang",
-    pinyin: "Wu Qiufang",
-    certs: []
-  },
-  "": {
-    name: "Chiu Hui-chi",
-    pinyin: "Chiu Hui-chi",
-    certs: []
-  },
-  "a0985610102@gmail.com": {
-    name: "Lin Zhenyi",
-    pinyin: "Lin Zhenyi",
-    certs: []
-  },
-  "chingts70@hotmail.com": {
-    name: "Cai Liqing",
-    pinyin: "Cai Liqing",
-    certs: []
-  },
-  "54854071@qq.com": {
-    name: "Huang Yun",
-    pinyin: "Huang Yun",
-    certs: []
-  },
-  "5521229@qq.com": {
-    name: "Chen Feifei",
-    pinyin: "Chen Feifei",
-    certs: []
-  },
-  "wytnicole@gmail.com": {
-    name: "Wang Yiting",
-    pinyin: "Wang Yiting",
-    certs: []
-  },
-  "lin640302@yahoo.com.tw": {
-    name: "Li Huiling",
-    pinyin: "Li Huiling",
-    certs: []
-  },
-  "395284700@qq.com": {
-    name: "Xu Qian",
-    pinyin: "Xu Qian",
-    certs: []
-  },
-  "chen.fefe@gmail.com": {
-    name: "Chen Jingfen",
-    pinyin: "Chen Jingfen",
-    certs: []
-  },
-  "745994350@qq.com": {
-    name: "Xia Xiaoling",
-    pinyin: "Xia Xiaoling",
+  "1018799420@qq.com": {
+    name: "Niu Lijun",
+    name_cn: "牛丽军",
     certs: []
   },
   "sampajanna@gmail.com": {
     name: "Yang Fengwei",
-    pinyin: "Yang Fengwei",
-    certs: []
+    name_cn: "杨豐蔚",
+    certs: [
+      { name: "台湾楊豐蔚 情绪色彩调香师  2025.08.22", url: "https://raw.githubusercontent.com/Best2030fr/afai-members/main/certs/台湾楊豐蔚 情绪色彩调香师  2025.08.22.jpg" },
+    ]
   },
-  "medusa.star@gmail.com": {
-    name: "Li Peiru",
-    pinyin: "Li Peiru",
-    certs: []
+  "peipeigrace@gmail.com": {
+    name: "Pan Peiyi",
+    name_cn: "潘佩宜",
+    certs: [
+      { name: "潘佩宜 情绪色彩调香师  2025", url: "https://raw.githubusercontent.com/Best2030fr/afai-members/main/certs/潘佩宜 情绪色彩调香师  2025.jpg" },
+    ]
   },
-  "251800889@qq.com": {
-    name: "Tsai Yu-hsi",
-    pinyin: "Tsai Yu-hsi",
-    certs: []
+  "lin640302@yahoo.com.tw": {
+    name: "Li Huiling",
+    name_cn: "李慧玲",
+    certs: [
+      { name: "李慧玲 情绪色彩调香师  2025", url: "https://raw.githubusercontent.com/Best2030fr/afai-members/main/certs/李慧玲 情绪色彩调香师  2025.jpg" },
+    ]
+  },
+  "chen.fefe@gmail.com": {
+    name: "Chen Jingfen",
+    name_cn: "陈静芬",
+    certs: [
+      { name: "陳靜芬 情绪色彩调香师  2025", url: "https://raw.githubusercontent.com/Best2030fr/afai-members/main/certs/陳靜芬 情绪色彩调香师  2025.jpg" },
+    ]
+  },
+  "chiuhc99@hotmail.com": {
+    name: "Chiu Hui-chi",
+    name_cn: "邱惠琪",
+    certs: [
+      { name: "邱惠琪 情绪色彩调香师  2025", url: "https://raw.githubusercontent.com/Best2030fr/afai-members/main/certs/邱惠琪 情绪色彩调香师  2025.jpg" },
+    ]
+  },
+  "Chiu454@yahoo.com.tw": {
+    name: "Qiu Huilin",
+    name_cn: "邱惠琳",
+    certs: [
+      { name: "邱惠琳 情绪色彩调香师  2025", url: "https://raw.githubusercontent.com/Best2030fr/afai-members/main/certs/邱惠琳 情绪色彩调香师  2025.jpg" },
+    ]
   },
   "oalf2626@gmail.com": {
     name: "Ke Fu'an",
-    pinyin: "Ke Fu'an",
-    certs: []
+    name_cn: "柯福安",
+    certs: [
+      { name: "柯福安 情绪色彩调香师  2025", url: "https://raw.githubusercontent.com/Best2030fr/afai-members/main/certs/柯福安 情绪色彩调香师  2025.jpg" },
+    ]
   },
-  "1018799420@qq.com": {
-    name: "Niu Lijun",
-    pinyin: "Niu Lijun",
-    certs: []
-  },
-  "": {
-    name: "Xia Xiaoya",
-    pinyin: "Xia Xiaoya",
-    certs: []
-  },
-  "amberchou0220@gmail.com": {
-    name: "Qiu Xiang",
-    pinyin: "Qiu Xiang",
-    certs: []
-  },
-  "a0972282598@gmail.com": {
-    name: "Lin Caijie",
-    pinyin: "Lin Caijie",
-    certs: []
+  "ivan5954@icloud.com": {
+    name: "He Zhihao",
+    name_cn: "何志浩",
+    certs: [
+      { name: "何志浩 情绪色彩调香师  2025", url: "https://raw.githubusercontent.com/Best2030fr/afai-members/main/certs/何志浩 情绪色彩调香师  2025.jpg" },
+    ]
   },
   "1026472673@qq.com": {
     name: "Yang Rongzhen",
-    pinyin: "Yang Rongzhen",
+    name_cn: "杨榕珍",
+    certs: [
+      { name: "23年 杨榕珍 芳香色彩疗愈师一级", url: "https://raw.githubusercontent.com/Best2030fr/afai-members/main/certs/23年 杨榕珍 芳香色彩疗愈师一级.jpg" },
+      { name: "杨榕珍  情绪色彩调香师  2025", url: "https://raw.githubusercontent.com/Best2030fr/afai-members/main/certs/杨榕珍  情绪色彩调香师  2025.jpg" },
+    ]
+  },
+  "guo55661640@163.com": {
+    name: "Guo Hong",
+    name_cn: "郭红",
+    certs: [
+      { name: "郭红 情绪色彩调香师  2025", url: "https://raw.githubusercontent.com/Best2030fr/afai-members/main/certs/郭红 情绪色彩调香师  2025.jpg" },
+    ]
+  },
+  "5521229@qq.com": {
+    name: "Chen Feifei",
+    name_cn: "陈菲菲",
+    certs: [
+      { name: "23年 陈菲菲 芳香色彩疗愈师一级", url: "https://raw.githubusercontent.com/Best2030fr/afai-members/main/certs/23年 陈菲菲 芳香色彩疗愈师一级.jpg" },
+      { name: "23年芳香疗法一级photo 陈菲菲", url: "https://raw.githubusercontent.com/Best2030fr/afai-members/main/certs/23年芳香疗法一级photo 陈菲菲.jpg" },
+      { name: "陈菲菲 情绪色彩调香师  2025", url: "https://raw.githubusercontent.com/Best2030fr/afai-members/main/certs/陈菲菲 情绪色彩调香师  2025.jpg" },
+    ]
+  },
+  "chingts70@hotmail.com": {
+    name: "Cai Liqing",
+    name_cn: "蔡丽卿",
+    certs: [
+      { name: "蔡麗卿 情绪色彩调香师  2025", url: "https://raw.githubusercontent.com/Best2030fr/afai-members/main/certs/蔡麗卿 情绪色彩调香师  2025.jpg" },
+    ]
+  },
+  "chiufang11@yahoo.com.tw": {
+    name: "Wu Qiufang",
+    name_cn: "吴秋芳",
+    certs: [
+      { name: "吳秋芳 情绪色彩调香师  2025", url: "https://raw.githubusercontent.com/Best2030fr/afai-members/main/certs/吳秋芳 情绪色彩调香师  2025.jpg" },
+    ]
+  },
+  "395284700@qq.com": {
+    name: "Xu Qian",
+    name_cn: "徐茜",
+    certs: [
+      { name: "23年徐茜 芳香按摩 一级", url: "https://raw.githubusercontent.com/Best2030fr/afai-members/main/certs/23年徐茜 芳香按摩 一级.jpg" },
+    ]
+  },
+  "cbenxuanling@qq.com": {
+    name: "Chen Dongling",
+    name_cn: "陈东玲",
+    certs: [
+      { name: "大陆陈东玲 情绪色彩调香师  2025.12.05", url: "https://raw.githubusercontent.com/Best2030fr/afai-members/main/certs/大陆陈东玲 情绪色彩调香师  2025.12.05.jpg" },
+    ]
+  },
+  "54854071@qq.com": {
+    name: "Huang Yun",
+    name_cn: "黄芸",
+    certs: [
+      { name: "大陆黄芸 情绪色彩调香师  2025.12.05", url: "https://raw.githubusercontent.com/Best2030fr/afai-members/main/certs/大陆黄芸 情绪色彩调香师  2025.12.05.jpg" },
+    ]
+  },
+  "redevaning@gmail.com": {
+    name: "Cai Xinyi",
+    name_cn: "蔡欣怡",
+    certs: [
+      { name: "台湾蔡欣怡 情绪色彩调香师  2026.01.19", url: "https://raw.githubusercontent.com/Best2030fr/afai-members/main/certs/台湾蔡欣怡 情绪色彩调香师  2026.01.19.jpg" },
+    ]
+  },
+  "medusa.star@gmail.com": {
+    name: "Li Peiru",
+    name_cn: "李佩如",
     certs: []
+  },
+  "wytnicole@gmail.com": {
+    name: "Wang Yiting",
+    name_cn: "王怡婷",
+    certs: [
+      { name: "台湾王怡婷 情绪色彩调香师  2026.01.25", url: "https://raw.githubusercontent.com/Best2030fr/afai-members/main/certs/台湾王怡婷 情绪色彩调香师  2026.01.25.jpg" },
+    ]
+  },
+  "a0972282598@gmail.com": {
+    name: "Lin Caijie",
+    name_cn: "林采潔",
+    certs: [
+      { name: "台湾林采潔 情绪色彩调香师  2026.01.25", url: "https://raw.githubusercontent.com/Best2030fr/afai-members/main/certs/台湾林采潔 情绪色彩调香师  2026.01.25.jpg" },
+    ]
+  },
+  "251800889@qq.com": {
+    name: "Tsai Yu-hsi",
+    name_cn: "蔡郁晰",
+    certs: [
+      { name: "台湾蔡郁晰 情绪色彩调香师  2026.01.25", url: "https://raw.githubusercontent.com/Best2030fr/afai-members/main/certs/台湾蔡郁晰 情绪色彩调香师  2026.01.25.jpg" },
+    ]
+  },
+  "a0985610102@gmail.com": {
+    name: "Lin Zhenyi",
+    name_cn: "林貞儀",
+    certs: [
+      { name: "台湾林貞儀 情绪色彩调香师  2026.01.25", url: "https://raw.githubusercontent.com/Best2030fr/afai-members/main/certs/台湾林貞儀 情绪色彩调香师  2026.01.25.jpg" },
+    ]
+  },
+  "amberchou0220@gmail.com": {
+    name: "Qiu Xiang",
+    name_cn: "邱翔",
+    certs: []
+  },
+  "745994350@qq.com": {
+    name: "Xia Xiaoling",
+    name_cn: "夏小玲",
+    certs: [
+      { name: "大陆夏小玲 情绪色彩调香师  2026.01.08", url: "https://raw.githubusercontent.com/Best2030fr/afai-members/main/certs/大陆夏小玲 情绪色彩调香师  2026.01.08.jpg" },
+    ]
+  },
+  "1181326055@qq.com": {
+    name: "Xia Xiaoya",
+    name_cn: "夏小婭",
+    certs: [
+      { name: "大陆 夏小娅 情绪色彩调香师  2026.01.08", url: "https://raw.githubusercontent.com/Best2030fr/afai-members/main/certs/大陆 夏小娅 情绪色彩调香师  2026.01.08.jpg" },
+    ]
   }
 };
-
 function loginByEmail() {
   const email = document.getElementById('emailInput').value.trim().toLowerCase();
   const errorEl = document.getElementById('errorMsg');
