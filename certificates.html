@@ -1,0 +1,370 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AFAI 证书查询 - Certificate Portal</title>
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body { font-family: 'Georgia', serif; background: #f5f3ee; color: #2d2d2d; }
+  
+  /* Header */
+  header { background: linear-gradient(135deg, #2d5a3d 0%, #4a7c59 50%, #6b8e23 100%); color: white; padding: 40px 20px; text-align: center; }
+  header h1 { font-size: 2em; margin-bottom: 8px; }
+  header p { opacity: 0.9; font-size: 1.1em; }
+
+  /* Container */
+  .container { max-width: 700px; margin: 40px auto; padding: 0 20px; }
+
+  /* Login Card */
+  .card { background: white; border-radius: 16px; box-shadow: 0 4px 20px rgba(0,0,0,0.08); padding: 40px; }
+  .card h2 { color: #2d5a3d; margin-bottom: 8px; font-size: 1.4em; }
+  .card p { color: #666; margin-bottom: 24px; font-size: 0.95em; }
+
+  /* Form */
+  .form-group { margin-bottom: 20px; }
+  .form-group label { display: block; margin-bottom: 8px; font-weight: 600; color: #333; }
+  .form-group input { width: 100%; padding: 14px 16px; border: 2px solid #e0e0e0; border-radius: 10px; font-size: 1em; transition: border-color 0.3s; }
+  .form-group input:focus { outline: none; border-color: #4a7c59; }
+  .btn { width: 100%; padding: 16px; background: linear-gradient(135deg, #2d5a3d, #4a7c59); color: white; border: none; border-radius: 10px; font-size: 1.1em; cursor: pointer; font-weight: 600; transition: transform 0.2s, box-shadow 0.2s; }
+  .btn:hover { transform: translateY(-2px); box-shadow: 0 6px 20px rgba(45,90,61,0.3); }
+  .btn:active { transform: translateY(0); }
+  .error-msg { background: #fff3f3; border: 1px solid #ffcdd2; color: #c62828; padding: 12px 16px; border-radius: 8px; margin-bottom: 16px; display: none; font-size: 0.9em; }
+  .hint { text-align: center; margin-top: 20px; font-size: 0.85em; color: #888; }
+
+  /* Profile Section */
+  .profile { display: none; }
+  .profile-header { text-align: center; margin-bottom: 30px; }
+  .profile-header .avatar { width: 80px; height: 80px; background: linear-gradient(135deg, #2d5a3d, #6b8e23); border-radius: 50%; margin: 0 auto 16px; display: flex; align-items: center; justify-content: center; font-size: 2em; color: white; font-weight: bold; }
+  .profile-header h2 { font-size: 1.5em; color: #2d5a3d; margin-bottom: 4px; }
+  .profile-header p { color: #888; font-size: 0.9em; }
+  .profile-info { background: #f8f6f1; border-radius: 12px; padding: 20px; margin-bottom: 24px; }
+  .profile-info .info-row { display: flex; justify-content: space-between; padding: 8px 0; border-bottom: 1px solid #e8e4dc; }
+  .profile-info .info-row:last-child { border-bottom: none; }
+  .profile-info .info-label { color: #888; font-size: 0.9em; }
+  .profile-info .info-value { font-weight: 600; color: #333; font-size: 0.9em; }
+
+  /* Certificates */
+  .cert-section h3 { color: #2d5a3d; margin-bottom: 16px; font-size: 1.2em; border-left: 4px solid #6b8e23; padding-left: 12px; }
+  .cert-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 16px; }
+  .cert-card { background: white; border-radius: 12px; overflow: hidden; box-shadow: 0 2px 12px rgba(0,0,0,0.06); transition: transform 0.2s, box-shadow 0.2s; }
+  .cert-card:hover { transform: translateY(-4px); box-shadow: 0 8px 24px rgba(0,0,0,0.12); }
+  .cert-card img { width: 100%; height: 200px; object-fit: contain; background: #fafafa; cursor: pointer; display: block; }
+  .cert-card .cert-info { padding: 14px; }
+  .cert-card .cert-name { font-weight: 600; color: #333; font-size: 0.95em; margin-bottom: 6px; }
+  .cert-card .cert-type { font-size: 0.8em; color: #6b8e23; background: #f0f7ec; padding: 4px 10px; border-radius: 20px; display: inline-block; }
+  .cert-card .download-btn { display: block; width: calc(100% - 28px); margin: 0 14px 14px; padding: 10px; background: #2d5a3d; color: white; text-align: center; text-decoration: none; border-radius: 8px; font-size: 0.85em; transition: background 0.2s; }
+  .cert-card .download-btn:hover { background: #4a7c59; }
+
+  /* Lightbox */
+  .lightbox { display: none; position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0,0,0,0.9); z-index: 9999; align-items: center; justify-content: center; }
+  .lightbox.show { display: flex; }
+  .lightbox img { max-width: 90%; max-height: 90%; border-radius: 8px; box-shadow: 0 20px 60px rgba(0,0,0,0.5); }
+  .lightbox-close { position: absolute; top: 20px; right: 30px; color: white; font-size: 40px; cursor: pointer; line-height: 1; }
+  .lightbox-close:hover { color: #6b8e23; }
+
+  /* Member Directory Link */
+  .bottom-links { text-align: center; margin-top: 30px; }
+  .bottom-links a { color: #4a7c59; text-decoration: none; font-size: 0.9em; }
+  .bottom-links a:hover { text-decoration: underline; }
+
+  /* Loading */
+  .loading { text-align: center; padding: 40px; color: #888; }
+
+  /* No certs */
+  .no-certs { text-align: center; padding: 40px; color: #888; }
+  .no-certs .icon { font-size: 3em; margin-bottom: 16px; }
+
+  /* Logout */
+  .logout-btn { display: inline-block; padding: 8px 20px; background: #f0f0f0; color: #666; border-radius: 8px; text-decoration: none; font-size: 0.85em; cursor: pointer; transition: background 0.2s; }
+  .logout-btn:hover { background: #e0e0e0; }
+</style>
+</head>
+<body>
+
+<header>
+  <h1>AFai 证书查询</h1>
+  <p>法国国际芳香文化交流协会 · 证书认证查询</p>
+</header>
+
+<div class="container">
+
+  <!-- Login Form -->
+  <div class="card" id="loginSection">
+    <h2>欢迎登录证书系统</h2>
+    <p>请输入您在 AFAI 注册时使用的<strong>邮箱地址</strong>，查看您的专属证书</p>
+    <div class="error-msg" id="errorMsg"></div>
+    <div class="form-group">
+      <label for="emailInput">邮箱地址</label>
+      <input type="email" id="emailInput" placeholder="例：redevaning@gmail.com" autocomplete="email">
+    </div>
+    <button class="btn" onclick="loginByEmail()">查询我的证书</button>
+    <div class="hint">
+      <a href="index.html">返回会员目录</a>
+    </div>
+  </div>
+
+  <!-- Profile & Certificates -->
+  <div class="profile" id="profileSection">
+    <div class="card">
+      <div style="text-align:right; margin-bottom:16px;">
+        <span class="logout-btn" onclick="logout()">退出登录</span>
+      </div>
+      <div class="profile-header">
+        <div class="avatar" id="avatarInitial"></div>
+        <h2 id="profileName"></h2>
+        <p id="profileEmail"></p>
+      </div>
+      <div class="profile-info">
+        <div class="info-row"><span class="info-label">Status</span><span class="info-value" id="profileStatus"></span></div>
+        <div class="info-row"><span class="info-label">认证类型</span><span class="info-value" id="profileNotes"></span></div>
+        <div class="info-row"><span class="info-label">联系电话</span><span class="info-value" id="profilePhone"></span></div>
+      </div>
+      <div class="cert-section" id="certSection">
+        <h3 id="certTitle">我的证书</h3>
+        <div class="cert-grid" id="certGrid"></div>
+        <div class="no-certs" id="noCerts" style="display:none;">
+          <div class="icon">📋</div>
+          <p>暂无证书记录</p>
+        </div>
+      </div>
+      <div class="bottom-links">
+        <a href="index.html">← 返回会员目录</a>
+        <span style="color:#ddd"> | </span>
+        <a href="aroma-ai.html">🌿 香氛 AI</a>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<!-- Lightbox -->
+<div class="lightbox" id="lightbox" onclick="closeLightbox()">
+  <span class="lightbox-close" onclick="closeLightbox()">&times;</span>
+  <img id="lightboxImg" src="" alt="Certificate">
+</div>
+
+<script>
+// ============ MEMBER DATA (from Airtable + local file mapping) ============
+// Each entry: pinyin name, email, baidu share link for cert images
+// "certs" array: [{name: "certificate name", url: "BAIDU_SHARE_URL"}]
+const MEMBER_DATA = {
+  "redevaning@gmail.com": {
+    name: "Cai Xinyi",
+    pinyin: "Cai Xinyi",
+    phone: "0922765610",
+    status: "2026/0116",
+    notes: "Mood Color Perfumer",
+    address: "4th Floor, No. 32, Alley 2, Lane 156, Wuxing Street, Xinyi District, Taipei City",
+    certs: [
+      { name: "台湾蔡欣怡 情绪色彩调香师", url: "https://drive.google.com/file/d/1PLACEHOLDER/view", note: "Please contact AFai for certificate image" }
+    ]
+  },
+  "guo55661640@163.com": {
+    name: "Guo Hong",
+    pinyin: "Guo Hong",
+    certs: []
+  },
+  "peipeigrace@gmail.com": {
+    name: "Pan Peiyi",
+    pinyin: "Pan Peiyi",
+    certs: []
+  },
+  "": {
+    name: "Qiu Huilin",
+    pinyin: "Qiu Huilin",
+    certs: []
+  },
+  "cbenxuanling@qq.com": {
+    name: "Chen Dongling",
+    pinyin: "Chen Dongling",
+    certs: []
+  },
+  "ivan5954@icloud.com": {
+    name: "He Zhihao",
+    pinyin: "He Zhihao",
+    certs: []
+  },
+  "chiufang11@yahoo.com.tw": {
+    name: "Wu Qiufang",
+    pinyin: "Wu Qiufang",
+    certs: []
+  },
+  "": {
+    name: "Chiu Hui-chi",
+    pinyin: "Chiu Hui-chi",
+    certs: []
+  },
+  "a0985610102@gmail.com": {
+    name: "Lin Zhenyi",
+    pinyin: "Lin Zhenyi",
+    certs: []
+  },
+  "chingts70@hotmail.com": {
+    name: "Cai Liqing",
+    pinyin: "Cai Liqing",
+    certs: []
+  },
+  "54854071@qq.com": {
+    name: "Huang Yun",
+    pinyin: "Huang Yun",
+    certs: []
+  },
+  "5521229@qq.com": {
+    name: "Chen Feifei",
+    pinyin: "Chen Feifei",
+    certs: []
+  },
+  "wytnicole@gmail.com": {
+    name: "Wang Yiting",
+    pinyin: "Wang Yiting",
+    certs: []
+  },
+  "lin640302@yahoo.com.tw": {
+    name: "Li Huiling",
+    pinyin: "Li Huiling",
+    certs: []
+  },
+  "395284700@qq.com": {
+    name: "Xu Qian",
+    pinyin: "Xu Qian",
+    certs: []
+  },
+  "chen.fefe@gmail.com": {
+    name: "Chen Jingfen",
+    pinyin: "Chen Jingfen",
+    certs: []
+  },
+  "745994350@qq.com": {
+    name: "Xia Xiaoling",
+    pinyin: "Xia Xiaoling",
+    certs: []
+  },
+  "sampajanna@gmail.com": {
+    name: "Yang Fengwei",
+    pinyin: "Yang Fengwei",
+    certs: []
+  },
+  "medusa.star@gmail.com": {
+    name: "Li Peiru",
+    pinyin: "Li Peiru",
+    certs: []
+  },
+  "251800889@qq.com": {
+    name: "Tsai Yu-hsi",
+    pinyin: "Tsai Yu-hsi",
+    certs: []
+  },
+  "oalf2626@gmail.com": {
+    name: "Ke Fu'an",
+    pinyin: "Ke Fu'an",
+    certs: []
+  },
+  "1018799420@qq.com": {
+    name: "Niu Lijun",
+    pinyin: "Niu Lijun",
+    certs: []
+  },
+  "": {
+    name: "Xia Xiaoya",
+    pinyin: "Xia Xiaoya",
+    certs: []
+  },
+  "amberchou0220@gmail.com": {
+    name: "Qiu Xiang",
+    pinyin: "Qiu Xiang",
+    certs: []
+  },
+  "a0972282598@gmail.com": {
+    name: "Lin Caijie",
+    pinyin: "Lin Caijie",
+    certs: []
+  },
+  "1026472673@qq.com": {
+    name: "Yang Rongzhen",
+    pinyin: "Yang Rongzhen",
+    certs: []
+  }
+};
+
+function loginByEmail() {
+  const email = document.getElementById('emailInput').value.trim().toLowerCase();
+  const errorEl = document.getElementById('errorMsg');
+  
+  if (!email) {
+    errorEl.textContent = '请输入邮箱地址';
+    errorEl.style.display = 'block';
+    return;
+  }
+  
+  if (!MEMBER_DATA.hasOwnProperty(email) || !MEMBER_DATA[email]) {
+    errorEl.textContent = '未找到该邮箱的会员记录，请联系 AFai 协会确认';
+    errorEl.style.display = 'block';
+    return;
+  }
+  
+  const member = MEMBER_DATA[email];
+  showProfile(member);
+}
+
+function showProfile(member) {
+  document.getElementById('loginSection').style.display = 'none';
+  document.getElementById('profileSection').style.display = 'block';
+  
+  document.getElementById('avatarInitial').textContent = member.name.charAt(0).toUpperCase();
+  document.getElementById('profileName').textContent = member.name;
+  document.getElementById('profileEmail').textContent = member.email || '未登记邮箱';
+  document.getElementById('profileStatus').textContent = member.status || '—';
+  document.getElementById('profileNotes').textContent = member.notes || '—';
+  document.getElementById('profilePhone').textContent = member.phone || '—';
+  
+  const grid = document.getElementById('certGrid');
+  const noCerts = document.getElementById('noCerts');
+  const certTitle = document.getElementById('certTitle');
+  
+  if (!member.certs || member.certs.length === 0) {
+    grid.innerHTML = '';
+    noCerts.style.display = 'block';
+    certTitle.textContent = '我的证书（共 0 张）';
+  } else {
+    noCerts.style.display = 'none';
+    certTitle.textContent = '我的证书（共 ' + member.certs.length + ' 张）';
+    grid.innerHTML = member.certs.map(function(cert) {
+      return '<div class="cert-card">' +
+        '<img src="' + cert.url + '" alt="' + cert.name + '" onclick="openLightbox(this.src)">' +
+        '<div class="cert-info">' +
+          '<div class="cert-name">' + cert.name + '</div>' +
+          '<span class="cert-type">AFai 认证</span>' +
+        '</div>' +
+        '<a class="download-btn" href="' + cert.url + '" target="_blank" rel="noopener">查看大图</a>' +
+      '</div>';
+    }).join('');
+  }
+}
+
+function logout() {
+  document.getElementById('profileSection').style.display = 'none';
+  document.getElementById('loginSection').style.display = 'block';
+  document.getElementById('emailInput').value = '';
+  document.getElementById('errorMsg').style.display = 'none';
+}
+
+function openLightbox(src) {
+  document.getElementById('lightboxImg').src = src;
+  document.getElementById('lightbox').classList.add('show');
+}
+
+function closeLightbox() {
+  document.getElementById('lightbox').classList.remove('show');
+}
+
+// Check if already logged in (sessionStorage)
+if (sessionStorage.getItem('afai_cert_email')) {
+  const email = sessionStorage.getItem('afai_cert_email');
+  const member = MEMBER_DATA[email];
+  if (member) showProfile(member);
+}
+</script>
+
+</body>
+</html>
